@@ -1,6 +1,7 @@
 #ToCSVConverter
 
-1. Wizja
+1.Wizja
+
 Komponent ma za zadanie przekonwerotwać dane wejściowe do odpowiedniego formatu, a następnie zapisać je w formacie CSV do pliku tekstowego.
 
 1.1 Założenia
@@ -16,9 +17,10 @@ Przed rozpoczęciem konwersji kontenera danych do formatu CSV należy, należy o
 Pakiet danych wejściowych będzie zawierał:
 
 identyfikator danej
+
 wartość danej
 
-2. Projekt
+2.Projekt
 
 2.1 Wykorzystane biblioteki
 
