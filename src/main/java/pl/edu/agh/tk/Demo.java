@@ -23,8 +23,10 @@ public class Demo
             listOfDataRows.add(list);
             listOfDataRows.add(list);
             listOfDataRows.add(list);
-            ToCSVConverter.convertFromPOJO("SENSOR41", list, "Temperature");
-            ToCSVConverter.convertFromPOJO("Sensor459", listOfDataRows, columnNames);
+            ToCSVConverter.writeToFile("SENSOR40", list, "Temperature");
+            ToCSVConverter.writeToFile("SENSOR41", listOfDataRows, columnNames);
+            ToCSVConverter.writeToFileWithTimeStamp("SENSOR42withTimeStamp", list, "Temperature");
+            ToCSVConverter.writeToFileWithTimeStamp("SENSOR43withTimeStamp", listOfDataRows, columnNames);
 
 
 

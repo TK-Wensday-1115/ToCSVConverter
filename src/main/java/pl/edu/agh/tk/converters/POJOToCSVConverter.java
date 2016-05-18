@@ -12,40 +12,85 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class POJOToCSVConverter implements Converter {
+public class POJOToCSVConverter {
 
     private static final String CSV_EXTENSION = ".csv";
     private static final String CSV_SEPARATOR = ",";
     private static final String LINE_SEPARATOR = "\n";
-    private static final String TIMESTAMP_FORMAT = "yyyyMMddHHmmssSSS";
+    private static final String TIMESTAMP_SEPARATOR = " #";
+    private static final String TIMESTAMP_FORMAT = "yyyy.MM.dd HH:mm:ss";
     private static final String OUTPUT_DIRECTORY_PROPERTY = "user.home";
     private static final String OUTPUT_PARENT_FOLDER = "Documents";
     private static final String OUTPUT_FOLDER = "CSVData";
 
 
-    public static void convertSimplePOJO(String id, List<? extends Number> dataList, String columnName) throws IOException {
-
+    public static void writeToFile(String id, List<? extends Number> dataList, String columnName) throws IOException {
         File file = createFileInUserDir(id);
-        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        boolean fileAlreadyExist = true;
+        if (!file.exists()) {
+            fileAlreadyExist = false;
+            file.createNewFile();
+        }
+        FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
         BufferedWriter fileBuffWriter = new BufferedWriter(fw);
-
-        writeHeaderToFile(fileBuffWriter, Arrays.asList(columnName));
+        if (!fileAlreadyExist){
+            writeHeaderToFile(fileBuffWriter, Arrays.asList(columnName));
+        }
         List<List<? extends Number>> listOfDataRows = convertSimpleListToListOfRows(dataList);
-        writeDataToFile(fileBuffWriter, listOfDataRows);
+        writeDataToFile(fileBuffWriter, listOfDataRows, false);
         fileBuffWriter.close();
     }
 
-    public static void convertMultiRowPOJO(String id, List<List<? extends Number>> listOfDataRows, List<String> columnNames) throws IOException {
+    public static void writeToFile(String id, List<List<? extends Number>> listOfDataRows, List<String> columnNames) throws IOException {
         File file = createFileInUserDir(id);
-        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        boolean fileAlreadyExist = true;
+        if (!file.exists()) {
+            fileAlreadyExist = false;
+            file.createNewFile();
+        }
+        FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
         BufferedWriter fileBuffWriter = new BufferedWriter(fw);
-
-        writeHeaderToFile(fileBuffWriter, columnNames);
-        writeDataToFile(fileBuffWriter, listOfDataRows);
+        if (!fileAlreadyExist){
+            writeHeaderToFile(fileBuffWriter, columnNames);
+        }
+        writeDataToFile(fileBuffWriter, listOfDataRows, false);
         fileBuffWriter.close();
     }
 
-    private static void writeDataToFile(BufferedWriter fileBuffWriter, List<List<? extends Number>> listOfDataRows) throws IOException {
+    public static void writeToFileWithTimeStamp(String id, List<? extends Number> dataList, String columnName) throws IOException {
+        File file = createFileInUserDir(id);
+        boolean fileAlreadyExist = true;
+        if (!file.exists()) {
+            fileAlreadyExist = false;
+            file.createNewFile();
+        }
+        FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+        BufferedWriter fileBuffWriter = new BufferedWriter(fw);
+        if (!fileAlreadyExist){
+            writeHeaderToFile(fileBuffWriter, Arrays.asList(columnName));
+        }
+        List<List<? extends Number>> listOfDataRows = convertSimpleListToListOfRows(dataList);
+        writeDataToFile(fileBuffWriter, listOfDataRows, true);
+        fileBuffWriter.close();
+    }
+
+    public static void writeToFileWithTimeStamp(String id, List<List<? extends Number>> listOfDataRows, List<String> columnNames) throws IOException {
+        File file = createFileInUserDir(id);
+        boolean fileAlreadyExist = true;
+        if (!file.exists()) {
+            fileAlreadyExist = false;
+            file.createNewFile();
+        }
+        FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+        BufferedWriter fileBuffWriter = new BufferedWriter(fw);
+        if (!fileAlreadyExist){
+            writeHeaderToFile(fileBuffWriter, columnNames);
+        }
+        writeDataToFile(fileBuffWriter, listOfDataRows, true);
+        fileBuffWriter.close();
+    }
+
+    private static void writeDataToFile(BufferedWriter fileBuffWriter, List<List<? extends Number>> listOfDataRows, boolean addTimeStamp) throws IOException {
         boolean isF = true;
         for (List<? extends Number> row : listOfDataRows){
             if (isF){
@@ -64,7 +109,17 @@ public class POJOToCSVConverter implements Converter {
                 }
             }
             fileBuffWriter.write(rowSB.toString());
+            if (addTimeStamp){
+                fileBuffWriter.write(TIMESTAMP_SEPARATOR + getTimeStamp());
+            }
         }
+        fileBuffWriter.write(LINE_SEPARATOR);
+    }
+
+    private static String getTimeStamp() {
+        DateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     private static List<List<? extends Number>> convertSimpleListToListOfRows(List<? extends Number> dataList) {
@@ -99,22 +154,7 @@ public class POJOToCSVConverter implements Converter {
             throw new IOException("Unable to create: " + customDir.getAbsolutePath());
         }
 
-        File file = createFileWithTimeStamp(customDir+File.separator+id);
-
-        if (!file.exists()) {
-            file.createNewFile();
-        } else {
-            throw new IOException("File: " + file.getAbsolutePath() + " already exist");
-        }
+        File file = new File(customDir+File.separator+id+CSV_EXTENSION);
         return file;
-    }
-
-    private static File createFileWithTimeStamp(String path) {
-        DateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
-        Date date = new Date();
-        String timeStamp = dateFormat.format(date);
-        String newPath = path + "_" + timeStamp+ CSV_EXTENSION;
-        System.out.println(newPath);
-        return new File(newPath);
     }
 }
