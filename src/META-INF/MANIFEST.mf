@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: Pawel Wozniak
+Main-Class: pl.edu.agh.tk.Demo
+Class-Path: .
