@@ -4,7 +4,7 @@
 
   <groupId>pl.edu.agh.tk</groupId>
   <artifactId>ToCSVConverter</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>ToCSVConverter</name>
@@ -34,6 +34,22 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+
+      <plugin>
+        <!-- Build an executable JAR -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>pl.edu.agh.tk.Demo</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 

@@ -6,29 +6,40 @@ import java.util.List;
 
 public class Demo
 {
-    public static void main( String[] args )
+    public static void main(String[] args )
     {
         try {
-
             List<String> columnNames = new LinkedList<>();
-            columnNames.add("Temperature1");
+            columnNames.add("Temperature");
             columnNames.add("Pressure");
             columnNames.add("Humidity");
 
-            List<Integer> list = new LinkedList<>();
-            list.add(2);
-            list.add(3);
-            list.add(9);
-            List<List<? extends Number>> listOfDataRows = new LinkedList<>();
-            listOfDataRows.add(list);
-            listOfDataRows.add(list);
-            listOfDataRows.add(list);
-            ToCSVConverter.writeToFile("SENSOR40", list, "Temperature");
-            ToCSVConverter.writeToFile("SENSOR41", listOfDataRows, columnNames);
-            ToCSVConverter.writeToFileWithTimeStamp("SENSOR42withTimeStamp", list, "Temperature");
-            ToCSVConverter.writeToFileWithTimeStamp("SENSOR43withTimeStamp", listOfDataRows, columnNames);
+            List<Integer> temperature = new LinkedList<>();
+            temperature.add(22);
+            temperature.add(25);
+            temperature.add(29);
+            List<Integer> pressure = new LinkedList<>();
+            pressure.add(1010);
+            pressure.add(1100);
+            pressure.add(1040);
+            List<Integer> humidity = new LinkedList<>();
+            humidity.add(50);
+            humidity.add(60);
+            humidity.add(40);
 
+            List<List<? extends Number>> listsOfData = new LinkedList<>();
+            listsOfData.add(temperature);
+            listsOfData.add(pressure);
+            listsOfData.add(humidity);
 
+            //Result file location: *\UserDir\Documents\CSVData\SENSOR_TEMP_ONLY
+            ToCSVConverter.writeToFile("SENSOR_TEMP_ONLY", temperature, "Temperature");
+            //Columns: Temperature, Pressure, Humidity
+            //Result file location: *\UserDir\Documents\CSVData\SENSOR_3PARAMS
+            ToCSVConverter.writeToFile("SENSOR_3PARAMS", listsOfData, columnNames);
+            ToCSVConverter.writeToFileWithTimeStamp("SENSOR_TEMP_ONLY_withTimeStamp", temperature, "Temperature");
+            ToCSVConverter.writeToFileWithTimeStamp("SENSOR_3PARAMS_withTimeStamp", listsOfData, columnNames);
+            System.out.println("Done. Created files: SENSOR_TEMP_ONLY, SENSOR_3PARAMS, SENSOR_TEMP_ONLY_withTimeStamp, SENSOR_3PARAMS_withTimeStamp");
 
         } catch (IOException e) {
             e.printStackTrace();

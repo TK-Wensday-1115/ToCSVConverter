@@ -17,14 +17,24 @@ public class POJOToCSVConverter {
     private static final String CSV_EXTENSION = ".csv";
     private static final String CSV_SEPARATOR = ",";
     private static final String LINE_SEPARATOR = "\n";
-    private static final String TIMESTAMP_SEPARATOR = " #";
+    private static final String TIMESTAMP_SEPARATOR = "\t\t #";
     private static final String TIMESTAMP_FORMAT = "yyyy.MM.dd HH:mm:ss";
     private static final String OUTPUT_DIRECTORY_PROPERTY = "user.home";
     private static final String OUTPUT_PARENT_FOLDER = "Documents";
     private static final String OUTPUT_FOLDER = "CSVData";
 
+    private static POJOToCSVConverter instance = null;
 
-    public static void writeToFile(String id, List<? extends Number> dataList, String columnName) throws IOException {
+    protected POJOToCSVConverter() {
+    }
+    public static POJOToCSVConverter getConverter() {
+        if(instance == null) {
+            instance = new POJOToCSVConverter();
+        }
+        return instance;
+    }
+
+    public void covertToCSVFile(String id, List<? extends Number> dataList, String columnName) throws IOException {
         File file = createFileInUserDir(id);
         boolean fileAlreadyExist = true;
         if (!file.exists()) {
@@ -41,7 +51,7 @@ public class POJOToCSVConverter {
         fileBuffWriter.close();
     }
 
-    public static void writeToFile(String id, List<List<? extends Number>> listOfDataRows, List<String> columnNames) throws IOException {
+    public void covertToCSVFile(String id, List<List<? extends Number>> listOfDataRows, List<String> columnNames) throws IOException {
         File file = createFileInUserDir(id);
         boolean fileAlreadyExist = true;
         if (!file.exists()) {
@@ -57,7 +67,7 @@ public class POJOToCSVConverter {
         fileBuffWriter.close();
     }
 
-    public static void writeToFileWithTimeStamp(String id, List<? extends Number> dataList, String columnName) throws IOException {
+    public void covertToCSVFileWithTimeStamp(String id, List<? extends Number> dataList, String columnName) throws IOException {
         File file = createFileInUserDir(id);
         boolean fileAlreadyExist = true;
         if (!file.exists()) {
@@ -74,7 +84,7 @@ public class POJOToCSVConverter {
         fileBuffWriter.close();
     }
 
-    public static void writeToFileWithTimeStamp(String id, List<List<? extends Number>> listOfDataRows, List<String> columnNames) throws IOException {
+    public void covertToCSVFileWithTimeStamp(String id, List<List<? extends Number>> listOfDataRows, List<String> columnNames) throws IOException {
         File file = createFileInUserDir(id);
         boolean fileAlreadyExist = true;
         if (!file.exists()) {
