@@ -108,7 +108,7 @@ public class POJOToCSVConverter {
             for (List<? extends Number> list : listOfDataRows){
                 StringBuilder rowSB = new StringBuilder();
                 if (isFirst){
-                    isFirst = false;
+                    isFirst = false; //s
                 } else {
                     rowSB.append(CSV_SEPARATOR);
                 }
