@@ -101,29 +101,41 @@ public class POJOToCSVConverter {
     }
 
     private static void writeDataToFile(BufferedWriter fileBuffWriter, List<List<? extends Number>> listOfDataRows, boolean addTimeStamp) throws IOException {
-        boolean isF = true;
-        for (List<? extends Number> row : listOfDataRows){
-            if (isF){
-                isF = false;
-            } else {
-                fileBuffWriter.write(LINE_SEPARATOR);
-            }
-            StringBuilder rowSB = new StringBuilder();
+        Integer longestListSize = findLongesListSize(listOfDataRows);
+
+        for (int i=0; i<longestListSize; i++){
             boolean isFirst = true;
-            for (Number value: row){
+            for (List<? extends Number> list : listOfDataRows){
+                StringBuilder rowSB = new StringBuilder();
                 if (isFirst){
-                    rowSB.append(value.toString());
                     isFirst = false;
                 } else {
-                    rowSB.append(CSV_SEPARATOR + value.toString());
+                    rowSB.append(CSV_SEPARATOR);
                 }
+                if (i < list.size()){
+                    Number currentValue = list.get(i);
+                    rowSB.append(currentValue.toString());
+                }
+                fileBuffWriter.write(rowSB.toString());
             }
-            fileBuffWriter.write(rowSB.toString());
             if (addTimeStamp){
                 fileBuffWriter.write(TIMESTAMP_SEPARATOR + getTimeStamp());
             }
+            fileBuffWriter.write(LINE_SEPARATOR);
         }
-        fileBuffWriter.write(LINE_SEPARATOR);
+    }
+
+    private static Integer findLongesListSize(List<List<? extends Number>> listOfDataRows) {
+        if (listOfDataRows == null){
+            return 0;
+        }
+        int longestListSize = 0;
+        for (List<? extends Number> list : listOfDataRows){
+            if (list.size() > longestListSize){
+                longestListSize = list.size();
+            }
+        }
+        return longestListSize;
     }
 
     private static String getTimeStamp() {
